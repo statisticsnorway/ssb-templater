@@ -60,7 +60,7 @@ ssb_rproject <- function(path, description,
   email <- paste0(user, '@ssb.no')
 
   # Get the list of files and directories inside the template_path
-  template_path <- system.file("rstudio/templates/project", package = "templater")
+  template_path <- system.file("rstudio/templates/project/project", package = "templater")
   template_contents <- list.files(template_path, full.names = TRUE)
   template_contents <- template_contents[!grepl("create_ssb_project", template_contents)]
 
@@ -72,21 +72,20 @@ ssb_rproject <- function(path, description,
 
   # Download files from KVAKK and ssb-project-client
   gitignore_url <- "https://raw.githubusercontent.com/statisticsnorway/kvakk-git-tools/main/kvakk_git_tools/recommended/gitignore"
-  utils::download.file(gitignore_url, destfile = paste0(path,"/.gitignore"), method = "auto", quiet=T)
   gitattributes_url <- "https://raw.githubusercontent.com/statisticsnorway/kvakk-git-tools/main/kvakk_git_tools/recommended/gitattributes"
-  utils::download.file(gitattributes_url, destfile = paste0(path,"/.gitattributes"), method = "auto", quiet=T)
   security_url <- "https://raw.githubusercontent.com/statisticsnorway/ssb-project-cli/main/SECURITY.md"
-  utils::download.file(security_url, destfile = paste0(path,"/SECURITY.md"), method = "auto", quiet=T)
   conduct_url <- "https://raw.githubusercontent.com/statisticsnorway/ssb-project-cli/main/CODE_OF_CONDUCT.md"
-  utils::download.file(conduct_url, destfile = paste0(path,"/CODE_OF_CONDUCT.md"), method = "auto", quiet=T)
   licence_url <- "https://raw.githubusercontent.com/statisticsnorway/ssb-project-cli/main/LICENSE"
-  utils::download.file(licence_url, destfile = paste0(path,"/LICENSE"), method = "auto", quiet=T)
 
+  utils::download.file(gitignore_url, destfile = paste0(path,"/.gitignore"), method = "auto", quiet=T)
+  utils::download.file(gitattributes_url, destfile = paste0(path,"/.gitattributes"), method = "auto", quiet=T)
+  utils::download.file(security_url, destfile = paste0(path,"/SECURITY.md"), method = "auto", quiet=T)
+  utils::download.file(conduct_url, destfile = paste0(path,"/CODE_OF_CONDUCT.md"), method = "auto", quiet=T)
+  utils::download.file(licence_url, destfile = paste0(path,"/LICENSE"), method = "auto", quiet=T)
 
   # Fix Readme file
   fix_file(path, "README.md", find = "{{PROJECT_NAME}}", project_name)
-  fix_file(path, "README.md", find = "{{PROJECT_NAME_CODE}}", prefixed_name)
-  fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
+  fix_file(path, "README.md", find = "{{PROJECT_DESCRIPTION}}", description)
 
   # Fix Licence files
   fix_file(path, "LICENSE", find = "2022", year)
@@ -112,7 +111,7 @@ ssb_rproject <- function(path, description,
 
     print("Project setting up. Preparing to create a repo on github...")
     if (Sys.getenv("GITHUB_PAT") == ""){
-      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priveldges):"))
+      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priviledges):"))
     }
 
     usethis::use_github(organisation = "statisticsnorway",
