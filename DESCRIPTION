@@ -1,0 +1,23 @@
+Package: templater
+Type: Package
+Title: templater
+Version: 0.0.1
+Authors@R: 
+  c(person(given = "Susie",
+           family = "Jentoft",
+           role = c("aut", "cre"),
+           email = "coo@ssb.no"),
+    person(given = "SSB",
+           role = "cph"))
+Maintainer: Susie Jentoft <coo@ssb.no>
+Description: Performs important functions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Config/testthat/edition: 3
+RoxygenNote: 7.3.0
+Suggests: 
+    testthat (>= 3.0.0)
+Depends: 
+    R (>= 2.10)
+
