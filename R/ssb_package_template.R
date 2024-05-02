@@ -60,7 +60,7 @@ ssb_rtemplate <- function(path, description,
   email <- paste0(user, '@ssb.no')
 
   # Get the list of files and directories inside the template_path
-  template_path <- system.file("rstudio/templates/project", package = "fellesr")
+  template_path <- system.file("rstudio/templates/package", package = "templater")
   template_contents <- list.files(template_path, full.names = TRUE)
   template_contents <- template_contents[!grepl("create_ssb_package", template_contents)]
 
