@@ -145,7 +145,7 @@ ssb_rtemplate <- function(path, description,
     response <- httr::PATCH(url, body = list(name = prefixed_name),
                             httr::authenticate("", Sys.getenv("GITHUB_PAT")),
                             encode = "json")
-    httr::content(response)
+    #httr::content(response)
 
     # Add branch protection
     response <- gh::gh(
