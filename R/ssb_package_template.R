@@ -94,7 +94,7 @@ ssb_rtemplate <- function(path, description,
 
   # Fix name of project file
   setwd(path)
-  file.rename( "packagename.Rproj", paste0(prefixed_name, ".Rproj"))
+  file.rename( "packagename.rproj", paste0(prefixed_name, ".Rproj"))
 
   # Add comments file
   usethis::use_cran_comments(open=F)
@@ -145,7 +145,7 @@ ssb_rtemplate <- function(path, description,
     response <- httr::PATCH(url, body = list(name = prefixed_name),
                             httr::authenticate("", Sys.getenv("GITHUB_PAT")),
                             encode = "json")
-    httr::content(response)
+    #httr::content(response)
 
     # Add branch protection
     response <- gh::gh(
