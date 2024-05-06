@@ -61,7 +61,7 @@ ssb_rtemplate <- function(path, description,
 
   # Get the list of files and directories inside the template_path
   template_path <- system.file("rstudio/templates/project/package", package = "templater")
-  template_contents <- list.files(template_path, full.names = TRUE)
+  template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
   template_contents <- template_contents[!grepl("create_ssb_package", template_contents)]
 
   # Copy each file and directory in template_contents to destination
