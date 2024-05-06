@@ -94,12 +94,13 @@ ssb_rtemplate <- function(path, description,
 
   # Fix name of project file
   setwd(path)
-  file.rename( "packagename.rproj", paste0(prefixed_name, ".Rproj"))
+  file.rename( "packagename.Rproj", paste0(prefixed_name, ".Rproj"))
 
   # Add comments file
   usethis::use_cran_comments(open=F)
 
   # Add example data
+  #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
   usethis::use_data(test_data, overwrite=TRUE)
 
