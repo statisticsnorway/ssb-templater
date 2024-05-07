@@ -1,7 +1,7 @@
 Package: templater
 Type: Package
 Title: templater
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
   c(person(given = "Susie",
            family = "Jentoft",
@@ -25,7 +25,8 @@ Imports:
     roxygen2,
     rstudioapi,
     stats,
-    git2r
+    git2r,
+    renv
 Suggests: 
     knitr,
     rmarkdown,
