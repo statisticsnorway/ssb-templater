@@ -38,19 +38,9 @@ ssb_rproject <- function(path, description,
     user <- Sys.info()['user']
     email <- paste0(user, '@ssb.no')
 
-    # Get the list of files and directories inside the template_path
-    template_path <- system.file("rstudio/templates/project/project", package = "templater")
-    template_contents <- list.files(template_path, full.names = TRUE)
-    #template_contents <- template_contents[!grepl("create_ssb_project", template_contents)]
-
-    # Copy each file and directory in template_contents to destination
-    for (file in template_contents) {
-        file.copy(file, path, recursive = TRUE)
-    }
-    Sys.sleep(2)
-
-    # Download files from KVAKK and ssb-project-client
-    get_standard_files(path)
+    # Copy files to project
+    get_files(path)
+    get_standard_files_offline(path)
 
     # Fix Readme file
     fix_file(path, "README.md", find = "{{PROJECT_NAME}}", project_name)
