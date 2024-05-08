@@ -20,21 +20,48 @@ fix_file <- function(destination, file, find, replace){
     writeLines(content, destination_path)
 }
 
+
 #' Copy files from standard template
 #'
 #' @param path Path to new project
 #' @param project_type Type of project. Choose between "project" or "package".
 get_files <- function(path, project_type){
-    # Get the list of files and directories inside the template_path
+    # Define the template path
     template_path <- system.file(file.path("rstudio/templates/project", project_type), package = "templater")
-    template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
 
-    # Copy each file and directory in template_contents to destination
+    # List all files and directories in the template path
+    template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE, recursive = TRUE)
+
+    # Copy each file and directory to the new project path, maintaining structure
     for (file in template_contents) {
-        file.copy(file, path, recursive = TRUE)
+        # Determine relative path from template path
+        relative_path <- gsub(paste0(template_path, "/"), "", file)
+
+        # Create the full destination path
+        destination_file <- file.path(path, relative_path)
+
+        # Ensure the destination directory exists
+        if (!dir.exists(dirname(destination_file))) {
+            dir.create(dirname(destination_file), recursive = TRUE)
+        }
+
+        # Copy the file if it's a file, or create the directory if it's a directory
+        if (file.info(file)$isdir) {
+            if (!dir.exists(destination_file)) {
+                dir.create(destination_file, recursive = TRUE)
+            }
+        } else {
+            file.copy(file, destination_file)
+        }
+
+        # Optionally print each file copied for verification
+        print(paste("Copying", file, "to", destination_file))
     }
+
+    # Delay to ensure all file operations are completed
     Sys.sleep(3)
 }
+
 
 #' Download standard files
 #'
@@ -65,7 +92,7 @@ get_standard_files_offline <- function(path){
     template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
 
     for (file in template_contents) {
-        file.copy(file, path, recursive = TRUE)
+        file.copy(file, path, recursive = FALSE)
     }
     Sys.sleep(3)
 
