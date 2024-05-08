@@ -197,6 +197,10 @@ get_standard_files_offline <- function(path){
         file.copy(file, path, recursive = TRUE)
     }
     Sys.sleep(3)
+
+    # specifically copy .gitignore and .gitattributtes
+    file.copy(file.path(template_path, ".gitignore"), path)
+    file.copy(file.path(template_path, ".gitattributes"), path)
 }
 
 
