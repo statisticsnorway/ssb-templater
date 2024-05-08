@@ -39,7 +39,7 @@ ssb_rproject <- function(path, description,
     email <- paste0(user, '@ssb.no')
 
     # Copy files to project
-    get_files(path)
+    get_files(path, "project")
     get_standard_files_offline(path)
 
     # Fix Readme file
@@ -67,7 +67,7 @@ ssb_rproject <- function(path, description,
     usethis::use_test("hello_world.R", open = F)
 
     # set up renv
-    renv::init(restart = FALSE, force = TRUE, load=FALSE)
+    renv::init(restart = FALSE, force = TRUE, load=FALSE, bare = TRUE)
 
     # Set up github
     if (github){

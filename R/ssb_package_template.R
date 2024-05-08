@@ -36,7 +36,7 @@ ssb_rtemplate <- function(path, description,
   email <- paste0(user, '@ssb.no')
 
   # Copy files to new project
-  get_files(path)
+  get_files(path, "package")
   get_standard_files_offline(path)
 
   # Fix Readme file
