@@ -67,7 +67,7 @@ ssb_rproject <- function(path, description,
     usethis::use_test("hello_world.R", open = F)
 
     # set up renv
-    renv::init(restart = FALSE, force = TRUE, load=FALSE)
+    renv::init(restart = FALSE, force = TRUE, load=FALSE, bare = TRUE)
 
     # Set up github
     if (github){
