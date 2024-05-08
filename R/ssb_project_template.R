@@ -39,7 +39,7 @@ ssb_rproject <- function(path, description,
     email <- paste0(user, '@ssb.no')
 
     # Copy files to project
-    get_files(path)
+    get_files(path, "project")
     get_standard_files_offline(path)
 
     # Fix Readme file

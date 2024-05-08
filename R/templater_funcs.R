@@ -20,10 +20,13 @@ fix_file <- function(destination, file, find, replace){
     writeLines(content, destination_path)
 }
 
-
-get_files <- function(path){
+#' Copy files from standard template
+#'
+#' @param path Path to new project
+#' @param project_type Type of project. Choose between "project" or "package".
+get_files <- function(path, project_type){
     # Get the list of files and directories inside the template_path
-    template_path <- system.file("rstudio/templates/project/package", package = "templater")
+    template_path <- system.file(file.path("rstudio/templates/project", project_type), package = "templater")
     template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
 
     # Copy each file and directory in template_contents to destination
@@ -82,7 +85,6 @@ create_project_file <- function(path, prefixed_name, project_type = "package"){
 
     project_file <- file.path(path, paste0(prefixed_name, ".Rproj"))
     if (project_type == "package"){
-        print("in package control")
         package_lines <- c(
             sprintf('BuildType: Package\n'),
             sprintf('PackageUseDevtools: Yes\n'),
@@ -90,7 +92,6 @@ create_project_file <- function(path, prefixed_name, project_type = "package"){
             sprintf('PackageRoxygenize: rd,collate,namespace\n')
         )}
     if (project_type == "project"){
-        print("in project control")
         package_lines <- ""
     }
     writeLines(
