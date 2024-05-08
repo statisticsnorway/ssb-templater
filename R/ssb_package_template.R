@@ -59,18 +59,9 @@ ssb_rtemplate <- function(path, description,
   user <- Sys.info()['user']
   email <- paste0(user, '@ssb.no')
 
-  # Get the list of files and directories inside the template_path
-  template_path <- system.file("rstudio/templates/project/package", package = "templater")
-  template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
-  #template_contents <- template_contents[!grepl("create_ssb_package", template_contents)]
-
-  # Copy each file and directory in template_contents to destination
-  for (file in template_contents) {
-    file.copy(file, path, recursive = TRUE)
-  }
-  Sys.sleep(2)
-
-  get_standard_files(path)
+  # Copy files to new project
+  get_files(path)
+  get_standard_files_offline(path)
 
   # Fix Readme file
   fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
@@ -167,6 +158,18 @@ ssb_rtemplate <- function(path, description,
   stop("Finished setting up package! This looks like an error but isn't (Just click ok).")
 }
 
+get_files <- function(path){
+    # Get the list of files and directories inside the template_path
+    template_path <- system.file("rstudio/templates/project/package", package = "templater")
+    template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
+
+    # Copy each file and directory in template_contents to destination
+    for (file in template_contents) {
+        file.copy(file, path, recursive = TRUE)
+    }
+    Sys.sleep(3)
+}
+
 #' Download standard files
 get_standard_files <- function(path){
     # Set file paths from KVAKK and ssb-project-client
@@ -182,6 +185,18 @@ get_standard_files <- function(path){
     utils::download.file(security_url, destfile = paste0(path,"/SECURITY.md"), method = "auto", quiet=T)
     utils::download.file(conduct_url, destfile = paste0(path,"/CODE_OF_CONDUCT.md"), method = "auto", quiet=T)
     utils::download.file(licence_url, destfile = paste0(path,"/LICENSE.md"), method = "auto", quiet=T)
+}
+
+#' Copy project files
+#' Copy standard file to new project without accessing github standard files
+get_standard_files_offline <- function(path){
+    template_path <- system.file("rstudio/templates/project/standardfiles", package = "templater")
+    template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
+
+    for (file in template_contents) {
+        file.copy(file, path, recursive = TRUE)
+    }
+    Sys.sleep(3)
 }
 
 
