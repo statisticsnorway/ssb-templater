@@ -100,14 +100,8 @@ ssb_rtemplate <- function(path, description,
     usethis::use_github(organisation = "statisticsnorway",
                         visibility = "internal", protocol = "https")
 
-    # Set up test action
-    usethis::use_github_action("check-standard", badge = TRUE)
-
-    # Set up pkgdown
-    usethis::use_pkgdown_github_pages()
-
-    # Set up other things
-    usethis::use_github_links()
+    # Set up actions
+    add_github_actions(path, type = "package")
 
     # Push all changes
     git2r::add(path=".")

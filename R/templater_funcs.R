@@ -165,3 +165,39 @@ add_branch_protect <- function(prefixed_name, branch = "main"){
         required_pull_requests_reviews_enforcement_level = "everyone"  # Enforce rules on everyone, including admins
     )
 }
+
+add_github_actions <- function(path, type = "package"){
+    # Define the primary function attempt
+    tryCatch({
+
+        # Attempt to use a GitHub Action
+        usethis::use_github_action("check-standard.yaml", badge = TRUE)
+
+        if (type == "package"){
+            usethis::use_pkgdown_github_pages()
+            usethis::use_github_links()
+        }
+
+        print("GitHub Action setup was successful.")
+
+    }, error = function(e) {
+        # If an error occurs, print the error message
+        print("No internet access found. Copying actions from template.")
+
+        dir.create(file.path(path, ".github"))
+        dir.create(file.path(path, ".github", "workflows"))
+        template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
+        #template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
+        action_path <- file.path(path, ".github", "workflows")
+        file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
+        if (type == "package"){
+            file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
+            file.copy(file.path(template_path, "_pkgdown.yml"), path)
+        }
+        Sys.sleep(3)
+
+        # add docs to gitignore
+        usethis::use_git_ignore("docs/")
+    })
+}
+
