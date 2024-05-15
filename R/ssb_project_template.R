@@ -81,7 +81,7 @@ ssb_rproject <- function(path, description,
                             visibility = "internal", protocol = "https")
 
         # Set up test action
-        usethis::use_github_action("check-standard", badge = TRUE)
+        add_github_actions(path, type = "project")
 
         # Push all changes
         git2r::add(path=".")
