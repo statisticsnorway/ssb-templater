@@ -77,7 +77,7 @@ ssb_rtemplate <- function(path, description,
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
   Sys.sleep(1)
-  usethis::use_data(test_data, overwrite=TRUE, open = FALSE)
+  usethis::use_data(test_data, overwrite=TRUE)
 
   # Add NAMESPACE and documents
   roxygen2::roxygenise()
