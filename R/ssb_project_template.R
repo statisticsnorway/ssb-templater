@@ -33,8 +33,7 @@ ssb_rproject <- function(path, description,
     dir.create(path, recursive = TRUE)
     message("Project created at: ", path)
 
-    # Specify other variables
-    year <- substring(Sys.Date(), 1, 4)
+    # Specify user variables
     user <- Sys.info()['user']
     email <- paste0(user, '@ssb.no')
 
@@ -42,20 +41,14 @@ ssb_rproject <- function(path, description,
     get_files(path, "project")
     get_standard_files_offline(path)
 
-    # Fix Readme file
-    fix_file(path, "README.md", find = "{{PROJECT_NAME}}", project_name)
-    fix_file(path, "README.md", find = "{{PROJECT_DESCRIPTION}}", description)
-
-    # Fix Licence files
-    fix_file(path, "LICENSE.md", find = "2022", year)
-
-    # Fix SECURITY
-    fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+    # Fix and replace placeholders
+    fix_files(path, project_name, prefixed_name, description, firstname, surname, email, type = "project")
 
     # Fix name of project file
     create_project_file(path, prefixed_name = prefixed_name,
                         project_type = "project")
     setwd(path)
+    print(paste0("Project files all copied to: ", path))
 
     # Start git
     usethis::use_git_config(user.name = firstname, user.email = email)

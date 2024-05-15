@@ -19,24 +19,30 @@ fix_file <- function(destination, file, find, replace){
 
     writeLines(content, destination_path)
 }
-fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email){
+fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email, type = "package"){
     year <- substring(Sys.Date(), 1, 4)
 
     # Fix Readme file
+    if (type == "package"){
+
+        fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
+
+        # Fix description
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
+
+        fix_file(path, "LICENSE", find = "{{YEAR}}", year)
+    }
+
     fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
-    fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
     fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
 
-    # Fix description
-    fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
-    fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
-    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
-    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
-    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
 
     # Fix Licence files
     fix_file(path, "LICENSE.md", find = "2022", year)
-    fix_file(path, "LICENSE", find = "{{YEAR}}", year)
 
     # Fix SECURITY
     fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
