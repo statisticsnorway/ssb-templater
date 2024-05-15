@@ -184,15 +184,17 @@ add_github_actions <- function(path, type = "package"){
         # If an error occurs, print the error message
         print("No internet access found. Copying actions from template.")
 
+        # Copy github action files
         dir.create(".github")
         dir.create(file.path(".github", "workflows"))
         template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
-
         action_path <- file.path(".github", "workflows")
         file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
+
         if (type == "package"){
+            # Create/copy pkgdown files offline
+            usethis:use_pkgdown()
             file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
-            file.copy(file.path(template_path, "_pkgdown.yml"), ".")
         }
         Sys.sleep(3)
 
