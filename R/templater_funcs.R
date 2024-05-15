@@ -54,8 +54,6 @@ get_files <- function(path, project_type){
             file.copy(file, destination_file)
         }
 
-        # Optionally print each file copied for verification
-        print(paste("Copying", file, "to", destination_file))
     }
 
     # Delay to ensure all file operations are completed

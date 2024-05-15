@@ -62,6 +62,7 @@ ssb_rtemplate <- function(path, description,
   create_project_file(path, prefixed_name = prefixed_name,
                 project_type = "package")
   setwd(path)
+  print(paste0("Project files all copied to: ", path))
 
   # Add comments file
   usethis::use_cran_comments(open=F)
@@ -75,7 +76,8 @@ ssb_rtemplate <- function(path, description,
   # Add example data
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
-  usethis::use_data(test_data, overwrite=TRUE)
+  Sys.sleep(1)
+  usethis::use_data(test_data, overwrite=TRUE, open = FALSE)
 
   # Add NAMESPACE and documents
   roxygen2::roxygenise()
