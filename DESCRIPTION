@@ -25,7 +25,8 @@ Imports:
     rstudioapi,
     stats,
     git2r,
-    renv
+    renv, 
+    pkgdown
 Suggests: 
     knitr,
     rmarkdown,

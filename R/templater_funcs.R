@@ -19,6 +19,29 @@ fix_file <- function(destination, file, find, replace){
 
     writeLines(content, destination_path)
 }
+fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email){
+    year <- substring(Sys.Date(), 1, 4)
+
+    # Fix Readme file
+    fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
+    fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
+    fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
+
+    # Fix description
+    fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
+    fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
+    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
+    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
+    fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
+
+    # Fix Licence files
+    fix_file(path, "LICENSE.md", find = "2022", year)
+    fix_file(path, "LICENSE", find = "{{YEAR}}", year)
+
+    # Fix SECURITY
+    fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+
+}
 
 
 #' Copy files from standard template
@@ -199,5 +222,22 @@ add_github_actions <- function(path, type = "package"){
         # add docs to gitignore
         usethis::use_git_ignore("docs/")
     })
+}
+
+safe_data <- function(){
+    # Read the current contents of the .gitignore file
+    gitignore_content <- readLines(".gitignore")
+
+    # Define the file
+    file_to_include <- "data/test_data.rda"
+
+    # Check if the file is already listed as an exception
+    if (!any(grepl(paste0("!", file_to_include), gitignore_content))) {
+        # Add the exception for the specific file
+        gitignore_content <- c(gitignore_content, paste0("!", file_to_include))
+    }
+
+    # Write the updated contents back to the .gitignore file
+    writeLines(gitignore_content, ".gitignore")
 }
 

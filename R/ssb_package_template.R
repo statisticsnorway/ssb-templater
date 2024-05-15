@@ -30,8 +30,7 @@ ssb_rtemplate <- function(path, description,
   dir.create(path, recursive = TRUE)
   message("Project created at: ", path)
 
-  # Specify other variables
-  year <- substring(Sys.Date(), 1, 4)
+  # Specify user and email
   user <- Sys.info()['user']
   email <- paste0(user, '@ssb.no')
 
@@ -39,24 +38,8 @@ ssb_rtemplate <- function(path, description,
   get_files(path, "package")
   get_standard_files_offline(path)
 
-  # Fix Readme file
-  fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
-  fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
-  fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
-
-  # Fix description
-  fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
-  fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
-
-  # Fix Licence files
-  fix_file(path, "LICENSE.md", find = "2022", year)
-  fix_file(path, "LICENSE", find = "{{YEAR}}", year)
-
-  # Fix SECURITY
-  fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+  # Fix and swap out template holders on copied files
+  fix_files(path, package_name, prefixed_name, description, firstname, surname, email)
 
   # Add project file
   create_project_file(path, prefixed_name = prefixed_name,
@@ -73,11 +56,12 @@ ssb_rtemplate <- function(path, description,
   # Add buildignore
   usethis::use_build_ignore("cran-comments.md")
 
-  # Add example data
+  # Add example data and add to safe list in .gitignore
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
   Sys.sleep(1)
   usethis::use_data(test_data, overwrite=TRUE)
+  safe_data()
 
   # Add NAMESPACE and documents
   roxygen2::roxygenise()
