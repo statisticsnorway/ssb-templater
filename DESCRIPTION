@@ -18,7 +18,6 @@ Config/testthat/edition: 3
 RoxygenNote: 7.3.0
 Imports:
     usethis,
-    testthat,
     getPass,
     gh,
     httr,
