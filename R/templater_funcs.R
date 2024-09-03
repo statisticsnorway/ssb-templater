@@ -197,37 +197,43 @@ add_github_actions <- function(path, type = "package"){
     # Define the primary function attempt
     tryCatch({
 
-        # Attempt to use a GitHub Action
-        usethis::use_github_action("check-standard.yaml", badge = TRUE)
-
+        # Attempt to use an automatic GitHub Action
         if (type == "package"){
+            usethis::use_github_action("check-standard.yaml", badge = TRUE)
             usethis::use_pkgdown_github_pages()
             usethis::use_github_links()
         }
 
         print("GitHub Action setup was successful.")
 
-    }, error = function(e) {
-        # If an error occurs, print the error message
-        print("No internet access found. Copying actions from template.")
+    }, error = add_github_actions_offline()
+    )
+}
 
-        # Copy github action files
-        dir.create(".github")
-        dir.create(file.path(".github", "workflows"))
-        template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
-        action_path <- file.path(".github", "workflows")
+add_github_actions_offline <- function(){
+    # If an error occurs, print the error message
+    print("No internet access found. Copying actions from template.")
+
+    # Copy github action files
+    dir.create(".github")
+    dir.create(file.path(".github", "workflows"))
+    template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
+    action_path <- file.path(".github", "workflows")
+
+
+    if (type == "package"){
         file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
 
-        if (type == "package"){
-            # Create/copy pkgdown files offline
-            usethis::use_pkgdown()
-            file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
-        }
-        Sys.sleep(3)
+        # Create/copy pkgdown files offline
+        usethis::use_pkgdown()
+        file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
+    } else if (type == "project"){
+        file.copy(file.path(template_path, "r-unittest.yml"), action_path, recursive = FALSE)
+    }
+    Sys.sleep(3)
 
-        # add docs to gitignore
-        usethis::use_git_ignore("docs/")
-    })
+    # add docs to gitignore
+    usethis::use_git_ignore("docs/")
 }
 
 safe_data <- function(){
