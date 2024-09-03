@@ -13,6 +13,9 @@
 #' @export
 ssb_rproject <- function(path, description,
                          firstname, surname, github){
+
+    withr::local_options(usethis.quiet = getOption("usethis.quiet", default = FALSE)) # Suppress git messages
+
     # Establish directories
     wd_dir <- getwd()
     base_dir <- dirname(path)
@@ -60,7 +63,23 @@ ssb_rproject <- function(path, description,
     usethis::use_test("hello_world.R", open = F)
 
     # set up renv
-    renv::init(restart = FALSE, force = TRUE, load=FALSE, bare = TRUE)
+    renv::init(restart = FALSE, load=FALSE, bare = TRUE)
+
+    # Install pacakages - not working well so taken out
+    #print("Installing packages ...")
+    # List of required packages including those not directly called
+    #required_packages <- c("arrow", "ggplot2", "testthat", "statisticsnorway/fellesr",
+    #                       "class", "foreign", "KernSmooth", "MASS", "mgcv", "Matrix", "nlme")
+    # Install all required packages
+    #for (pkg in required_packages) {
+    #    renv::install(library=renv::paths$library(),
+    #                  package=pkg,
+    #                  prompt = FALSE)
+    #}
+    # Commit changes
+    #git2r::add(path=".")
+    #git2r::commit(message="Initial commit.")
+    #renv::snapshot(library=renv::paths$library(), prompt = FALSE)
 
     # Set up github
     if (github){
