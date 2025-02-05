@@ -1,7 +1,7 @@
 Package: templater
 Type: Package
 Title: templater
-Version: 0.0.5
+Version: 0.0.6
 Authors@R: 
   c(person(given = "Susie",
            family = "Jentoft",
@@ -32,5 +32,5 @@ Suggests:
     rmarkdown,
 Depends: 
     R (>= 2.10)
-URL: https://github.com/statisticsnorway/ssb-templater
+URL: https://github.com/statisticsnorway/ssb-templater, https://super-robot-mzg74eo.pages.github.io/
 BugReports: https://github.com/statisticsnorway/ssb-templater/issues

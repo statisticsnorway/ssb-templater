@@ -1,3 +1,35 @@
+user_agent <- function() {
+    user_agent <- paste0(Sys.getenv("DAPLA_ENVIRONMENT"), "-",
+                         Sys.getenv("DAPLA_REGION"), "-",
+                         Sys.getenv("DAPLA_SERVICE"), "-",
+                         httr:::default_ua())
+
+    if (Sys.getenv("DAPLA_REGION") == "" | Sys.getenv("DAPLA_ENVIRONMENT") == "" | Sys.getenv("DAPLA_SERVICE") == ""){
+        user_agent <- "external"
+    }
+
+    return(user_agent)
+}
+
+initialer_funk <- function(lastefil) {
+    if (grepl("ON_PREM", user_agent())) {
+        initialer <- Sys.getenv('USER')
+    }
+    if (grepl("BIP", user_agent())) {
+        initialer <- gsub("@ssb.no", "", Sys.getenv('JUPYTERHUB_USER'))
+    }
+    if (grepl("DAPLA_LAB", user_agent())) {
+        initialer <- gsub("@ssb.no", "", Sys.getenv('DAPLA_USER'))
+    }
+    if (grepl("external", user_agent())) {
+        initialer <- Sys.info()["user"]
+    }
+    if (!exists("initialer")) {
+        warning("Finner ikke initialer")
+    }
+    return(initialer)
+}
+
 #' Fix files by replacement of holders
 #'
 #' @param destination Where the file should be stored
@@ -20,6 +52,33 @@ fix_file <- function(destination, file, find, replace){
     writeLines(content, destination_path)
 }
 
+#' Fix several files
+#' @keywords internal
+fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email, type = "package"){
+    year <- substring(Sys.Date(), 1, 4)
+
+    # Fix Readme file
+    if (type == "package"){
+
+        fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
+
+        # Fix description
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
+
+        fix_file(path, "LICENSE", find = "{{YEAR}}", year)
+    }
+
+    fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
+    fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
+
+    # Fix SECURITY
+    fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+
+}
 
 #' Copy files from standard template
 #'
@@ -125,8 +184,8 @@ create_project_file <- function(path, prefixed_name, project_type = "package"){
         c(
             sprintf('Version: 1.0\n'),
             sprintf('RestoreWorkspace: Default\n'),
-            sprintf('SaveWorkspace: Default\n'),
-            sprintf('AlwaysSaveHistory: Default\n'),
+            sprintf('SaveWorkspace: No\n'),
+            sprintf('AlwaysSaveHistory: No\n'),
             sprintf('EnableBookmarks: Yes\n'),
             sprintf('EnableCodeIndexing: Yes\n'),
             sprintf('NumSPacesForTab: 4\n'),
@@ -171,33 +230,59 @@ add_github_actions <- function(path, type = "package"){
     tryCatch({
 
         # Attempt to use a GitHub Action
-        usethis::use_github_action("check-standard.yaml", badge = TRUE)
-
         if (type == "package"){
+            usethis::use_github_action("check-standard.yaml", badge = TRUE)
             usethis::use_pkgdown_github_pages()
             usethis::use_github_links()
         }
 
         print("GitHub Action setup was successful.")
 
-    }, error = function(e) {
-        # If an error occurs, print the error message
-        print("No internet access found. Copying actions from template.")
-
-        dir.create(file.path(path, ".github"))
-        dir.create(file.path(path, ".github", "workflows"))
-        template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
-        #template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
-        action_path <- file.path(path, ".github", "workflows")
-        file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
-        if (type == "package"){
-            file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
-            file.copy(file.path(template_path, "_pkgdown.yml"), path)
-        }
-        Sys.sleep(3)
-
-        # add docs to gitignore
-        usethis::use_git_ignore("docs/")
-    })
+    }, error = add_github_actions_offline()
+    )
 }
 
+add_github_actions_offline <- function(){
+    # If an error occurs, print the error message
+    print("No internet access found. Copying actions from template.")
+
+    # Copy github action files
+    dir.create(".github")
+    dir.create(file.path(".github", "workflows"))
+    template_path <- system.file("rstudio/templates/project/actionfiles", package = "templater")
+    action_path <- file.path(".github", "workflows")
+
+
+    if (type == "package"){
+        file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
+
+        # Create/copy pkgdown files offline
+        usethis::use_pkgdown()
+        file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
+    } else if (type == "project"){
+        file.copy(file.path(template_path, "r-unittest.yml"), action_path, recursive = FALSE)
+    }
+    Sys.sleep(3)
+
+    # add docs to gitignore
+    usethis::use_git_ignore("docs/")
+}
+
+#' Add test data to safe list
+#' @keywords internal
+safe_data <- function(){
+    # Read the current contents of the .gitignore file
+    gitignore_content <- readLines(".gitignore")
+
+    # Define the file
+    file_to_include <- "data/test_data.rda"
+
+    # Check if the file is already listed as an exception
+    if (!any(grepl(paste0("!", file_to_include), gitignore_content))) {
+        # Add the exception for the specific file
+        gitignore_content <- c(gitignore_content, paste0("!", file_to_include))
+    }
+
+    # Write the updated contents back to the .gitignore file
+    writeLines(gitignore_content, ".gitignore")
+}

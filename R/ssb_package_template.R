@@ -1,3 +1,5 @@
+
+
 #' SSB package template
 #'
 #' Create an R package with standard SSB format
@@ -32,36 +34,21 @@ ssb_rtemplate <- function(path, description,
 
   # Specify other variables
   year <- substring(Sys.Date(), 1, 4)
-  user <- Sys.info()['user']
+  user <- initialer_funk()
   email <- paste0(user, '@ssb.no')
 
   # Copy files to new project
   get_files(path, "package")
-  get_standard_files_offline(path)
+  get_standard_files(path)
 
-  # Fix Readme file
-  fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
-  fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
-  fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
-
-  # Fix description
-  fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
-  fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
-  fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
-
-  # Fix Licence files
-  fix_file(path, "LICENSE.md", find = "2022", year)
-  fix_file(path, "LICENSE", find = "{{YEAR}}", year)
-
-  # Fix SECURITY
-  fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+  # Fix and swap out template holders on copied files
+  fix_files(path, package_name, prefixed_name, description, firstname, surname, email)
 
   # Add project file
   create_project_file(path, prefixed_name = prefixed_name,
                 project_type = "package")
   setwd(path)
+  print(paste0("Project files copied to: ", path))
 
   # Add comments file
   usethis::use_cran_comments(open=F)
@@ -76,14 +63,17 @@ ssb_rtemplate <- function(path, description,
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
   usethis::use_data(test_data, overwrite=TRUE)
+  safe_data()
 
   # Add NAMESPACE and documents
   roxygen2::roxygenise()
 
-  # Start git
+  # Start git - still asking about commits and can't find solution to suppress
   usethis::use_git_config(user.name = firstname, user.email = email)
-  usethis::use_git()
-  usethis::git_default_branch_configure(name = "main")
+  #usethis::use_git(message="Initial commit")
+
+  git2r::init(branch="main")
+  #usethis::git_default_branch_configure(name = "main")
 
   # Set up tests
   usethis::use_testthat()
@@ -105,7 +95,7 @@ ssb_rtemplate <- function(path, description,
 
     # Push all changes
     git2r::add(path=".")
-    git2r::commit(message="Initial commit.")
+    git2r::commit(message="Initial commit")
     git2r::push(credentials=git2r::cred_token())
 
     # Rename repo
