@@ -21,6 +21,6 @@ Position: left
 
 Parameter: github
 Widget: CheckboxInput
-Label: Create a GitHub Repository
+Label: Create a GitHub Repository (Recommended)
 Default: On
 Position: left
