@@ -1,8 +1,7 @@
 user_agent <- function() {
     user_agent <- paste0(Sys.getenv("DAPLA_ENVIRONMENT"), "-",
                          Sys.getenv("DAPLA_REGION"), "-",
-                         Sys.getenv("DAPLA_SERVICE"), "-",
-                         httr:::default_ua())
+                         Sys.getenv("DAPLA_SERVICE"), "-")
 
     if (Sys.getenv("DAPLA_REGION") == "" | Sys.getenv("DAPLA_ENVIRONMENT") == "" | Sys.getenv("DAPLA_SERVICE") == ""){
         user_agent <- "external"
@@ -71,6 +70,8 @@ fix_files <- function(path, package_name, prefixed_name, description, firstname,
 
         fix_file(path, "LICENSE", find = "{{YEAR}}", year)
     }
+
+    fix_file(path, "LICENSE.md", find = "2022", year)
 
     fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
     fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
