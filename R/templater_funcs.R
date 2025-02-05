@@ -1,3 +1,37 @@
+user_agent <- function() {
+    user_agent <- paste0(Sys.getenv("DAPLA_ENVIRONMENT"), "-",
+                         Sys.getenv("DAPLA_REGION"), "-",
+                         Sys.getenv("DAPLA_SERVICE"), "-",
+                         httr:::default_ua())
+
+    if (Sys.getenv("DAPLA_REGION") == "" | Sys.getenv("DAPLA_ENVIRONMENT") == "" | Sys.getenv("DAPLA_SERVICE") == ""){
+        user_agent <- "external"
+    }
+
+    return(user_agent)
+}
+
+
+
+initialer_funk <- function(lastefil) {
+    if (grepl("ON_PREM", user_agent())) {
+        initialer <- Sys.getenv('USER')
+    }
+    if (grepl("BIP", user_agent())) {
+        initialer <- gsub("@ssb.no", "", Sys.getenv('JUPYTERHUB_USER'))
+    }
+    if (grepl("DAPLA_LAB", user_agent())) {
+        initialer <- gsub("@ssb.no", "", Sys.getenv('DAPLA_USER'))
+    }
+    if (grepl("external", user_agent())) {
+        initialer <- Sys.info()["user"]
+    }
+    if (!exists("initialer")) {
+        warning("Finner ikke initialer")
+    }
+    return(initialer)
+}
+
 #' Fix files by replacement of holders
 #'
 #' @param destination Where the file should be stored
@@ -20,6 +54,33 @@ fix_file <- function(destination, file, find, replace){
     writeLines(content, destination_path)
 }
 
+#' Fix several files
+#' @keywords internal
+fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email, type = "package"){
+    year <- substring(Sys.Date(), 1, 4)
+
+    # Fix Readme file
+    if (type == "package"){
+
+        fix_file(path, "README.md", find = "{{PACKAGE_NAME_CODE}}", prefixed_name)
+
+        # Fix description
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_NAME}}", package_name)
+        fix_file(path, "DESCRIPTION", find = "{{PACKAGE_DESCRIPTION}}", description)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME1}}", firstname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_NAME2}}", surname)
+        fix_file(path, "DESCRIPTION", find = "{{AUTHOR_EMAIL}}", email)
+
+        fix_file(path, "LICENSE", find = "{{YEAR}}", year)
+    }
+
+    fix_file(path, "README.md", find = "{{PACKAGE_NAME}}", package_name)
+    fix_file(path, "README.md", find = "{{PACKAGE_DESCRIPTION}}", description)
+
+    # Fix SECURITY
+    fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+
+}
 
 #' Copy files from standard template
 #'
@@ -201,3 +262,21 @@ add_github_actions <- function(path, type = "package"){
     })
 }
 
+#' Add test data to safe list
+#' @keywords internal
+safe_data <- function(){
+    # Read the current contents of the .gitignore file
+    gitignore_content <- readLines(".gitignore")
+
+    # Define the file
+    file_to_include <- "data/test_data.rda"
+
+    # Check if the file is already listed as an exception
+    if (!any(grepl(paste0("!", file_to_include), gitignore_content))) {
+        # Add the exception for the specific file
+        gitignore_content <- c(gitignore_content, paste0("!", file_to_include))
+    }
+
+    # Write the updated contents back to the .gitignore file
+    writeLines(gitignore_content, ".gitignore")
+}
