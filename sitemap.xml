@@ -1,36 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/404.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/SECURITY.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/index.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/reference/fix_file.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/reference/ssb_rproject.html</loc>
-  </url>
-  <url>
-    <loc>https://super-robot-mzg74eo.pages.github.io/reference/ssb_rtemplate.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/404.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/LICENSE-text.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/LICENSE.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/SECURITY.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/authors.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/index.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/news/index.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/reference/fix_file.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/reference/index.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/reference/ssb_rproject.html</loc></url>
+<url><loc>https://super-robot-mzg74eo.pages.github.io/reference/ssb_rtemplate.html</loc></url>
 </urlset>
+
