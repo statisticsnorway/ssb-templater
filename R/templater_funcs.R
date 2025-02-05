@@ -184,8 +184,8 @@ create_project_file <- function(path, prefixed_name, project_type = "package"){
         c(
             sprintf('Version: 1.0\n'),
             sprintf('RestoreWorkspace: Default\n'),
-            sprintf('SaveWorkspace: Default\n'),
-            sprintf('AlwaysSaveHistory: Default\n'),
+            sprintf('SaveWorkspace: No\n'),
+            sprintf('AlwaysSaveHistory: No\n'),
             sprintf('EnableBookmarks: Yes\n'),
             sprintf('EnableCodeIndexing: Yes\n'),
             sprintf('NumSPacesForTab: 4\n'),

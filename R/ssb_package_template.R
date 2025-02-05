@@ -50,13 +50,6 @@ ssb_rtemplate <- function(path, description,
   setwd(path)
   print(paste0("Project files copied to: ", path))
 
-  # Fix project file to not save .RData and history files
-  rproj_file <- list.files(path = path, pattern = "\\.Rproj$", full.names = TRUE)
-  if (length(rproj_file) > 0) {
-      write("\nSaveWorkspace: No", file = rproj_file, append = TRUE)
-      write("\nAlwaysSaveHistory: No", file = rproj_file, append = TRUE)
-  }
-
   # Add comments file
   usethis::use_cran_comments(open=F)
 
