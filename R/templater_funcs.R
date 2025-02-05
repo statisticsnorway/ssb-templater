@@ -11,8 +11,6 @@ user_agent <- function() {
     return(user_agent)
 }
 
-
-
 initialer_funk <- function(lastefil) {
     if (grepl("ON_PREM", user_agent())) {
         initialer <- Sys.getenv('USER')
