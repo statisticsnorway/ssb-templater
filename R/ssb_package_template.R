@@ -70,15 +70,14 @@ ssb_rtemplate <- function(path, description,
 
   # Start git - still asking about commits and can't find solution to suppress
   usethis::use_git_config(user.name = firstname, user.email = email)
-  usethis::use_git(message="Initial commit")
-  usethis::git_default_branch_configure(name = "main")
+  #usethis::use_git(message="Initial commit")
+
+  git2r::init(branch="main")
+  #usethis::git_default_branch_configure(name = "main")
 
   # Set up tests
   usethis::use_testthat()
   usethis::use_test("hello_world.R", open = F)
-
-  # Set up actions
-  add_github_actions(path, type = "package")
 
   # Set up github
   if (github){
@@ -90,6 +89,9 @@ ssb_rtemplate <- function(path, description,
 
     usethis::use_github(organisation = "statisticsnorway",
                         visibility = "internal", protocol = "https")
+
+    # Set up actions
+    add_github_actions(path, type = "package")
 
     # Push all changes
     git2r::add(path=".")
