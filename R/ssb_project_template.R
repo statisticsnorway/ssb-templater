@@ -20,7 +20,7 @@ ssb_rproject <- function(path, description,
     original_path <- NULL
 
     # Establish standard project name
-    if (substr(project_name, 1, 4) == "stat-"){
+    if (substr(project_name, 1, 5) == "stat-"){
         prefixed_name <- project_name
         project_name <- substring(project_name, 5, nchar(project_name))
     } else {
@@ -42,15 +42,7 @@ ssb_rproject <- function(path, description,
     get_files(path, "project")
     get_standard_files_offline(path)
 
-    # Fix Readme file
-    fix_file(path, "README.md", find = "{{PROJECT_NAME}}", project_name)
-    fix_file(path, "README.md", find = "{{PROJECT_DESCRIPTION}}", description)
-
-    # Fix Licence files
-    fix_file(path, "LICENSE.md", find = "2022", year)
-
-    # Fix SECURITY
-    fix_file(path, "SECURITY.md", find = "ssb-project-cli", prefixed_name)
+    fix_files(path, prefixed_name, prefixed_name, description, firstname, surname, email)
 
     # Fix name of project file
     create_project_file(path, prefixed_name = prefixed_name,
@@ -68,6 +60,7 @@ ssb_rproject <- function(path, description,
 
     # set up renv
     renv::init(restart = FALSE, force = TRUE, load=FALSE, bare = TRUE)
+    renv::snapshot()
 
     # Set up github
     if (github){
