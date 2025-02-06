@@ -1,5 +1,3 @@
-
-
 #' SSB package template
 #'
 #' Create an R package with standard SSB format
@@ -60,27 +58,19 @@ ssb_rtemplate <- function(path, description,
   usethis::use_news_md(open = F)
 
   # Add buildignore
-  usethis::use_build_ignore(c("cran-comments.md","CODE_OF_CONDUCT.md", "LICENSE.md", "SECURITY.md"))
+  usethis::use_build_ignore(c("cran-comments.md","CODE_OF_CONDUCT.md",
+                              "LICENSE.md", "SECURITY.md", paste0(prefixed_name,".Rproj")))
 
   # Add example data
-  #' Test data
-  #'
-  #' An example of how test data is documented. See https://r-pkgs.org/data.html#sec-documenting-data
-  #'
-  #' @format ## `test_data`
-  #' A data frame with 10 rows and 2 columns:
-  #' \describe{
-  #'   \item{x}{Random variable}
-  #'   \item{y}{Random variable}
-  #' }
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
+
   Sys.sleep(3) # To ensure that the object is created before saving
   usethis::use_data(test_data, overwrite=TRUE)
   safe_data()
 
   # Add NAMESPACE and documents
-  roxygen2::roxygenise()
+  roxygen2::roxygenise(clean=TRUE)
 
   # Start git - still asking about commits and can't find solution to suppress
   usethis::use_git_config(user.name = firstname, user.email = email)

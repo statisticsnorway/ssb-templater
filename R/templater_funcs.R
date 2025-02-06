@@ -1,3 +1,9 @@
+#' Get system details
+#'
+#' @return String with system details
+#'
+#' @keywords internal
+#' @noRd
 user_agent <- function() {
     user_agent <- paste0(Sys.getenv("DAPLA_ENVIRONMENT"), "-",
                          Sys.getenv("DAPLA_REGION"), "-",
@@ -10,7 +16,13 @@ user_agent <- function() {
     return(user_agent)
 }
 
-initialer_funk <- function(lastefil) {
+#' Get user initials/name
+#'
+#' @return Initials or name
+#'
+#' @keywords internal
+#' @noRd
+initialer_funk <- function() {
     if (grepl("ON_PREM", user_agent())) {
         initialer <- Sys.getenv('USER')
     }
@@ -37,6 +49,8 @@ initialer_funk <- function(lastefil) {
 #' @param replace Replacement term
 #'
 #' @return NULL
+#' @keywords internal
+#' @noRd
 fix_file <- function(destination, file, find, replace){
     destination_path <- file.path(destination, file)
 
@@ -52,7 +66,17 @@ fix_file <- function(destination, file, find, replace){
 }
 
 #' Fix several files
+#' @param path Path to where the new project is being set up
+#' @param package_name Name of the package
+#' @param prefixed_name Name of the package including the ssb- or stat- prefix
+#' @param description Package description
+#' @param firstname Authors name
+#' @param surname Authors last name
+#' @param email Authors email
+#' @param type If pacakge or project
+#'
 #' @keywords internal
+#' @noRd
 fix_files <- function(path, package_name, prefixed_name, description, firstname, surname, email, type = "package"){
     year <- substring(Sys.Date(), 1, 4)
 
@@ -85,6 +109,8 @@ fix_files <- function(path, package_name, prefixed_name, description, firstname,
 #'
 #' @param path Path to new project
 #' @param project_type Type of project. Choose between "project" or "package".
+#' @keywords internal
+#' @noRd
 get_files <- function(path, project_type){
     # Define the template path
     template_path <- system.file(file.path("rstudio/templates/project", project_type), package = "templater")
@@ -126,6 +152,9 @@ get_files <- function(path, project_type){
 #' Download standard files
 #'
 #' @param path Path to where the new project is being set up
+#'
+#' @keywords internal
+#' @noRd
 get_standard_files <- function(path){
     # Set file paths from KVAKK and ssb-project-client
     gitignore_url <- "https://raw.githubusercontent.com/statisticsnorway/kvakk-git-tools/main/kvakk_git_tools/recommended/gitignore"
@@ -147,6 +176,9 @@ get_standard_files <- function(path){
 #' Copy standard file to new project without accessing github standard files
 #'
 #' @param path Path to where the new project is being set up
+#'
+#' @keywords internal
+#' @noRd
 get_standard_files_offline <- function(path){
     template_path <- system.file("rstudio/templates/project/standardfiles", package = "templater")
     template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
@@ -168,6 +200,9 @@ get_standard_files_offline <- function(path){
 #' @param path to where the new project is being set up
 #' @param prefixed_name Name of the package including the ssb- or stat- prefix
 #' @param project_type Whether the project is a package ("package") or project ("project").
+#'
+#' @keywords internal
+#' @noRd
 create_project_file <- function(path, prefixed_name, project_type = "package"){
 
     project_file <- file.path(path, paste0(prefixed_name, ".Rproj"))
@@ -204,6 +239,9 @@ create_project_file <- function(path, prefixed_name, project_type = "package"){
 #'
 #' @param prefixed_name Name of the project including the prefix
 #' @param branch Name of the github branch to protect
+#'
+#' @keywords internal
+#' @noRd
 add_branch_protect <- function(prefixed_name, branch = "main"){
     if (Sys.getenv("GITHUB_PAT") == ""){
         Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priveldges):"))
@@ -226,6 +264,14 @@ add_branch_protect <- function(prefixed_name, branch = "main"){
     )
 }
 
+#' Add github actions
+#'
+#' @param path Path to where the new project is being set up
+#' @param type If package or project
+#'
+#' @return NULL
+#' @keywords internal
+#' @noRd
 add_github_actions <- function(path, type = "package"){
     # Define the primary function attempt
     tryCatch({
@@ -242,6 +288,13 @@ add_github_actions <- function(path, type = "package"){
     )
 }
 
+#' Add github actions offline version
+#'
+#' @param type If package or project
+#'
+#' @return NULL
+#' @keywords internal
+#' @noRd
 add_github_actions_offline <- function(type = "package"){
     # If an error occurs, print the error message
     print("No internet access found. Copying actions from template.")
@@ -270,6 +323,7 @@ add_github_actions_offline <- function(type = "package"){
 
 #' Add test data to safe list
 #' @keywords internal
+#' @noRd
 safe_data <- function(){
     # Read the current contents of the .gitignore file
     gitignore_content <- readLines(".gitignore")
