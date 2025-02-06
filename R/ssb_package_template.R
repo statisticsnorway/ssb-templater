@@ -99,7 +99,11 @@ ssb_rtemplate <- function(path, description,
     if (Sys.getenv("GITHUB_PAT") == ""){
       Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow privileges):"))
     }
+    # Check everything commited
+    git2r::add(repo=".", path=".")
+    git2r::commit(message="Initial commit")
 
+    # Set up repo
     usethis::use_github(organisation = "statisticsnorway",
                         visibility = "internal", protocol = "https")
 
@@ -117,9 +121,17 @@ ssb_rtemplate <- function(path, description,
     response <- httr::PATCH(url, body = list(name = prefixed_name),
                             httr::authenticate("", Sys.getenv("GITHUB_PAT")),
                             encode = "json")
+    # Update remote
+    new_remote_url <- paste0("https://github.com/statisticsnorway/", prefixed_name, ".git")
+    system(paste("git remote set-url origin", new_remote_url))
 
-    # Add/fix links with new name
-    use_github_links(overwrite = TRUE)
+    # Add links with new name
+    usethis::use_github_links(overwrite = TRUE)
+
+    # Final push
+    git2r::add(repo = ".", path=".")
+    git2r::commit(message="Initial commit")
+    git2r::push(credentials=git2r::cred_token())
 
     # Add branch protection
     add_branch_protect(prefixed_name)
