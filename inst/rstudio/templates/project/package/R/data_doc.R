@@ -8,5 +8,6 @@
 #'   \item{x}{Random variable}
 #'   \item{y}{Random variable}
 #' }
+#'  @usage data(test_data)
 #'  @export
 "test_data"
