@@ -62,7 +62,6 @@ ssb_rtemplate <- function(path, description,
                               "LICENSE.md", "SECURITY.md", paste0(prefixed_name,".Rproj")))
 
   # Add example data
-  #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
 
   Sys.sleep(3) # To ensure that the object is created before saving
