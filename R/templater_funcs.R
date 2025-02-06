@@ -239,11 +239,11 @@ add_github_actions <- function(path, type = "package"){
 
         print("GitHub Action setup was successful.")
 
-    }, error = add_github_actions_offline()
+    }, error = add_github_actions_offline(type = type)
     )
 }
 
-add_github_actions_offline <- function(){
+add_github_actions_offline <- function(type = "package"){
     # If an error occurs, print the error message
     print("No internet access found. Copying actions from template.")
 
