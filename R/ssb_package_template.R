@@ -97,7 +97,7 @@ ssb_rtemplate <- function(path, description,
 
     print("Project setting up. Preparing to create a repo on github...")
     if (Sys.getenv("GITHUB_PAT") == ""){
-      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priviledges):"))
+      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow privileges):"))
     }
 
     usethis::use_github(organisation = "statisticsnorway",
