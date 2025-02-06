@@ -28,6 +28,9 @@ ssb_rtemplate <- function(path, description,
     path <- file.path(base_dir, prefixed_name)
   }
 
+  # Set usethis options
+  options(usethis.overwrite = TRUE)
+
   # Create the local directory with the prefixed name
   dir.create(path, recursive = TRUE)
   message("Project created at: ", path)
@@ -94,13 +97,14 @@ ssb_rtemplate <- function(path, description,
 
     print("Project setting up. Preparing to create a repo on github...")
     if (Sys.getenv("GITHUB_PAT") == ""){
-      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priveldges):"))
+      Sys.setenv(GITHUB_PAT = getPass::getPass("Enter your github PAT (with workflow priviledges):"))
     }
 
     usethis::use_github(organisation = "statisticsnorway",
                         visibility = "internal", protocol = "https")
 
     # Set up actions
+    print("Setting up GitHub actions...")
     add_github_actions(path, type = "package")
 
     # Push all changes
