@@ -57,9 +57,19 @@ ssb_rtemplate <- function(path, description,
   usethis::use_news_md(open = F)
 
   # Add buildignore
-  usethis::use_build_ignore("cran-comments.md")
+  usethis::use_build_ignore(c("cran-comments.md","CODE_OF_CONDUCT.md", "LICENSE.md", "SECURITY.md"))
 
   # Add example data
+  #' Test data
+  #'
+  #' An example of how test data is documented. See https://r-pkgs.org/data.html#sec-documenting-data
+  #'
+  #' @format ## `test_data`
+  #' A data frame with 10 rows and 2 columns:
+  #' \describe{
+  #'   \item{x}{Random variable}
+  #'   \item{y}{Random variable}
+  #' }
   #' @export
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
   Sys.sleep(3) # To ensure that the object is created before saving
@@ -74,7 +84,6 @@ ssb_rtemplate <- function(path, description,
   git2r::init(branch="main")
   git2r::add(repo=".", path=".")
   git2r::commit(message="Initial commit")
-
 
   # Set up tests
   usethis::use_testthat()
@@ -104,6 +113,9 @@ ssb_rtemplate <- function(path, description,
     response <- httr::PATCH(url, body = list(name = prefixed_name),
                             httr::authenticate("", Sys.getenv("GITHUB_PAT")),
                             encode = "json")
+
+    # Add/fix links with new name
+    use_github_links(overwrite = TRUE)
 
     # Add branch protection
     add_branch_protect(prefixed_name)

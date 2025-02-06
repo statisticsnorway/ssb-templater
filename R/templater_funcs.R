@@ -152,7 +152,7 @@ get_standard_files_offline <- function(path){
     template_contents <- list.files(template_path, full.names = TRUE, all.files = TRUE)
 
     for (file in template_contents) {
-        file.copy(file, path, recursive = FALSE)
+        file.copy(file, path, recursive = FALSE, overwrite=FALSE)
     }
     Sys.sleep(3)
 
@@ -234,7 +234,6 @@ add_github_actions <- function(path, type = "package"){
         if (type == "package"){
             usethis::use_github_action("check-standard.yaml", badge = TRUE)
             usethis::use_pkgdown_github_pages()
-            usethis::use_github_links()
         }
 
         print("GitHub Action setup was successful.")
@@ -255,13 +254,13 @@ add_github_actions_offline <- function(type = "package"){
 
 
     if (type == "package"){
-        file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE)
+        file.copy(file.path(template_path, "R-CMD-check.yaml"), action_path, recursive = FALSE, overwrite=FALSE)
 
         # Create/copy pkgdown files offline
         usethis::use_pkgdown()
-        file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE)
+        file.copy(file.path(template_path, "pkgdown.yaml"), action_path, recursive = FALSE, overwrite=FALSE)
     } else if (type == "project"){
-        file.copy(file.path(template_path, "r-unittest.yml"), action_path, recursive = FALSE)
+        file.copy(file.path(template_path, "r-unittest.yml"), action_path, recursive = FALSE, overwrite=FALSE)
     }
     Sys.sleep(3)
 
