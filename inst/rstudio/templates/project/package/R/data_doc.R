@@ -10,5 +10,4 @@
 #' }
 #'
 #' @usage data(test_data)
-#' @export
 "test_data"

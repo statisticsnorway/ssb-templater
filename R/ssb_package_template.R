@@ -63,7 +63,6 @@ ssb_rtemplate <- function(path, description,
 
   # Add example data
   test_data <- data.frame(x = stats::runif(10), y=stats::runif(10))
-
   Sys.sleep(3) # To ensure that the object is created before saving
   usethis::use_data(test_data, overwrite=TRUE)
   safe_data()
