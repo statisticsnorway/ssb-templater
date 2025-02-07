@@ -113,9 +113,6 @@ ssb_rtemplate <- function(path, description,
     new_remote_url <- paste0("https://github.com/statisticsnorway/", prefixed_name, ".git")
     system(paste("git remote set-url origin", new_remote_url))
 
-    # Add links with new name
-    usethis::use_github_links(overwrite = TRUE)
-
     # Add branch protection
     add_branch_protect(prefixed_name)
   }
