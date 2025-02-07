@@ -117,11 +117,6 @@ ssb_rtemplate <- function(path, description,
     # Add links with new name
     usethis::use_github_links(overwrite = TRUE)
 
-    # Final push
-    git2r::add(repo = ".", path=".")
-    git2r::commit(message="Initial commit")
-    git2r::push(credentials=git2r::cred_token())
-
     # Add branch protection
     add_branch_protect(prefixed_name)
   }
