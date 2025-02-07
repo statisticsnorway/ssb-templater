@@ -80,6 +80,10 @@ ssb_rtemplate <- function(path, description,
   usethis::use_testthat()
   usethis::use_test("hello_world.R", open = F)
 
+  # Explicitly add data
+  system("git add data/test_data.rda")
+  try(git2r::commit(message = "Initial commit"), silent = TRUE)
+
   # Set up github
   if (github){
 
@@ -112,6 +116,14 @@ ssb_rtemplate <- function(path, description,
     # Update remote
     new_remote_url <- paste0("https://github.com/statisticsnorway/", prefixed_name, ".git")
     system(paste("git remote set-url origin", new_remote_url))
+
+    # Add links with new name
+    usethis::use_github_links(overwrite = TRUE)
+
+    # Final commit and push
+    git2r::add(repo = ".", path=".")
+    try(git2r::commit(message="Initial commit"), silent = TRUE)
+    try(git2r::push(credentials=git2r::cred_token()), silent = TRUE)
 
     # Add branch protection
     add_branch_protect(prefixed_name)
