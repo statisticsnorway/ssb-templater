@@ -42,7 +42,9 @@ ssb_rproject <- function(path, description,
     get_files(path, "project")
     get_standard_files_offline(path)
 
-    fix_files(path, prefixed_name, prefixed_name, description, firstname, surname, email)
+    fix_files(path, prefixed_name, prefixed_name, description,
+              firstname, surname, email,
+              type = "project")
 
     # Fix name of project file
     create_project_file(path, prefixed_name = prefixed_name,
@@ -59,7 +61,9 @@ ssb_rproject <- function(path, description,
     usethis::use_test("hello_world.R", open = F)
 
     # set up renv
-    renv::init(restart = FALSE, force = TRUE, load=FALSE, bare = TRUE)
+    renv::init(restart = FALSE, force = TRUE,
+               load = TRUE, bare = TRUE,
+               dependencies = c("testthat", "getPass", "git2r", "httr"))
     renv::snapshot()
 
     # Set up github
