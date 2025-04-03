@@ -12,6 +12,14 @@
 #' @export
 ssb_rtemplate <- function(path, description,
                           firstname, surname, github){
+
+    if (missing(firstname) || firstname == "") {
+        stop("Author's firstname is required.")
+    }
+    if (missing(surname) || surname == "") {
+        stop("Author's surname is required.")
+    }
+
   wd_dir <- getwd()
   base_dir <- dirname(path)
   package_name <- basename(path)
