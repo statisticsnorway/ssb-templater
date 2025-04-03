@@ -13,6 +13,7 @@
 #' @export
 ssb_rproject <- function(path, description,
                          firstname, surname, github){
+
     # Establish directories
     wd_dir <- getwd()
     base_dir <- dirname(path)
@@ -60,12 +61,6 @@ ssb_rproject <- function(path, description,
     usethis::use_testthat()
     usethis::use_test("hello_world.R", open = F)
 
-    # set up renv
-    renv::init(restart = FALSE, force = TRUE,
-               load = TRUE, bare = TRUE,
-               dependencies = c("testthat", "getPass", "git2r", "httr"))
-    renv::snapshot()
-
     # Set up github
     if (github){
 
@@ -91,6 +86,23 @@ ssb_rproject <- function(path, description,
                                 httr::authenticate("", Sys.getenv("GITHUB_PAT")),
                                 encode = "json")
 
+
+        # Add branch protection
+        add_branch_protect(prefixed_name)
+    }
+
+    # set up renv
+    renv::init(restart = FALSE, force = TRUE,
+               load = TRUE, bare = TRUE)
+    renv::install("testthat")
+    renv::snapshot()
+
+    if (github){
+
+        # Push renv changes
+        git2r::add(path=".")
+        git2r::commit(message="Added renv environment.")
+        git2r::push(credentials=git2r::cred_token())
 
         # Add branch protection
         add_branch_protect(prefixed_name)
